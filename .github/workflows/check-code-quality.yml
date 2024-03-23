@@ -1,6 +1,14 @@
-name: check-code-quality
-run-name: Check code quality
-on: [pull_request]
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: 'Check code quality'
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '**'
+
 jobs:
   check-typescript:
     runs-on: ubuntu-latest
@@ -26,3 +34,13 @@ jobs:
       - run: npm install -g pnpm
       - run: pnpm install
       - run: pnpm run lint
+  check-svelte-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/Iron
+      - run: npm install -g pnpm
+      - run: pnpm install
+      - run: pnpm svelte-check

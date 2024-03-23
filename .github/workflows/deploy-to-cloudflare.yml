@@ -1,15 +1,15 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 
-name: 'delete deployments'
+name: 'Deploy to Cloudflare'
 on:
-  pull_request:
+  workflow_run:
+    workflows: [Check code quality]
     types:
-      - closed
-    branches:
-      - main
+      - completed
 
 jobs:
-  delete:
+  on-success:
+    if: ${{ github.actor != 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == 'dval-in/dval-in' }}
     permissions:
       contents: read
       deployments: write
@@ -17,8 +17,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: 'Delete Cloudflare Pages deployments'
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: true
+      - name: Build
+        run: pnpm run build
+      - name: Publish to Cloudflare Pages
         uses: unlike-ltd/github-actions-cloudflare-pages@159278d1b12c975d1d5e538720e4da343131ede3 #v1.3.0
+        id: pages
         with:
           cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           cloudflare-account-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
