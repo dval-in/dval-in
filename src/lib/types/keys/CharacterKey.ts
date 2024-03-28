@@ -11,6 +11,7 @@ const characterKeyList = [
 	'Candace',
 	'Charlotte',
 	'Chevreuse',
+	'Chiori',
 	'Chongyun',
 	'Collei',
 	'Cyno',

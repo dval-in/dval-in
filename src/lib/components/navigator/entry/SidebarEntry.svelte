@@ -6,7 +6,6 @@
 	export let link: string;
 	export let title: string;
 	export let isSidebarOpen: boolean;
-	export let onClick: () => void;
 
 	$: currentActivePath = $page.url.pathname;
 </script>
@@ -15,7 +14,7 @@
 	{...$$restProps}
 	href={link}
 	{icon}
-	{onClick}
+	on:click
 	variant={currentActivePath === link ? 'activeSidebar' : 'sidebar'}
 >
 	<div class={`${isSidebarOpen ? '' : 'sm:max-xl:hidden'}`}>{title}</div>

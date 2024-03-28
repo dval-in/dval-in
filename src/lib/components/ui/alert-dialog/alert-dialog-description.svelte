@@ -8,9 +8,6 @@
 	export { className as class };
 </script>
 
-<AlertDialogPrimitive.Description
-	class={cn('text-sm text-muted-foreground', className)}
-	{...$$restProps}
->
+<AlertDialogPrimitive.Description {...$$restProps} class={cn('text-sm text-text', className)}>
 	<slot />
 </AlertDialogPrimitive.Description>

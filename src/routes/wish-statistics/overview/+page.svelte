@@ -5,6 +5,7 @@
 	import {
 		mdiAccount,
 		mdiBaby,
+		mdiBook,
 		mdiGlobeModel,
 		mdiImport,
 		mdiSwordCross,
@@ -60,6 +61,9 @@
 		{/if}
 		{#if wishData?.Standard !== undefined}
 			<BannerOverviewCard data={wishData.Standard} icon={mdiTrashCanOutline} title="Standard" />
+		{/if}
+		{#if wishData?.Chronicled !== undefined}
+			<BannerOverviewCard data={wishData.Chronicled} icon={mdiBook} title="Chronicled" />
 		{/if}
 		{#if wishData?.Beginner !== undefined}
 			<BannerOverviewCard data={wishData.Beginner} icon={mdiBaby} title="Beginner" />

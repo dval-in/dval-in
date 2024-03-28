@@ -43,7 +43,7 @@
 		<Searchbar searchGroup="Characters" searchableDataList={data} />
 		<IconButton icon={mdiSort}>Sort By</IconButton>
 		<IconButton icon={mdiFilterOutline}>Filter By</IconButton>
-		<IconButton icon={view ? mdiViewList : mdiViewGrid} onClick={toggleViewType} />
+		<IconButton icon={view ? mdiViewList : mdiViewGrid} on:click={toggleViewType} />
 	</svelte:fragment>
 	<div class="flex flex-wrap gap-4 justify-center">
 		{#each data as character}

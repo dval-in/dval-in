@@ -1,4 +1,4 @@
-const wishBannerKeyList = ['WeaponEvent', 'Standard', 'CharacterEvent', 'Beginner'];
+const wishBannerKeyList = ['WeaponEvent', 'Standard', 'CharacterEvent', 'Beginner', 'Chronicled'];
 
 export type WishBannerKey = (typeof wishBannerKeyList)[number];
 

@@ -13,7 +13,7 @@
 		<div
 			class="flex max-sm:flex-col max-sm:flex-1 flex-row flex-wrap justify-between gap-4 sm:gap-6"
 		>
-			<Text textColor="primary" type="h1">{title}</Text>
+			<Text class="text-primary" type="h1">{title}</Text>
 			{#if $$slots.titlebarActions}
 				<div class="flex max-sm:flex-col max-sm:flex-1 flex-row flex-wrap gap-2 justify-end">
 					<slot name="titlebarActions" />

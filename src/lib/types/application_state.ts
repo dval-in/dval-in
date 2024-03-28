@@ -21,3 +21,14 @@ export interface ApplicationState {
 	weapons?: IWeapon[];
 	wishes?: IWishes;
 }
+
+export const isApplicationData = (object: unknown): object is ApplicationState => {
+	if (typeof object === 'object' && object !== null) {
+		if ('format' in object) {
+			if (object.format === 'dvalin') {
+				return true;
+			}
+		}
+	}
+	return false;
+};

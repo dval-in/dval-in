@@ -31,6 +31,9 @@ export async function load({ params }: { params: RouteParams }) {
 		case 'beginner':
 			pageType = 'Beginner';
 			break;
+		case 'chronicled':
+			pageType = 'Chronicled';
+			break;
 		default:
 			error(404, 'Not found');
 	}

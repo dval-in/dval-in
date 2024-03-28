@@ -44,7 +44,7 @@
 				link={path.link}
 				icon={path.icon}
 				{isSidebarOpen}
-				onClick={closeSidebar}
+				on:click={closeSidebar}
 			/>
 		{/each}
 	</CollapsibleContent>

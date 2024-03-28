@@ -1,4 +1,4 @@
-import type { PaimonCharacters, PaimonData, PaimonPulls } from '$lib/types/import/paimon';
+import { isPaimonData, type PaimonCharacters, type PaimonPulls } from '$lib/types/import/paimon';
 import type { ApplicationState } from '$lib/types/application_state';
 import { isServerKey } from '$lib/types/keys/ServerKey';
 import type { IWish } from '$lib/types/wish';
@@ -7,6 +7,7 @@ import type { CharacterKey } from '$lib/types/keys/CharacterKey';
 import type { ISettings } from '$lib/types/settings';
 import type { ICharacters } from '$lib/types/character';
 import type { BannerKey } from '$lib/types/keys/BannerKey';
+import type { IImporterService } from '$lib/services/importer/index';
 
 function convertPaimonCharacter(paimonPullId: string): CharacterKey {
 	switch (paimonPullId) {
@@ -36,6 +37,8 @@ function convertPaimonCharacter(paimonPullId: string): CharacterKey {
 			return 'Chevreuse';
 		case 'chongyun':
 			return 'Chongyun';
+		case 'chiori':
+			return 'Chiori';
 		case 'collei':
 			return 'Collei';
 		case 'cyno':
@@ -237,6 +240,8 @@ function convertPaimonWeapon(paimonPullId: string): WeaponKey {
 			return 'Deathmatch';
 		case 'debate_club':
 			return 'DebateClub';
+		case 'dialogues_of_the_desert_sages':
+			return 'DialoguesOfTheDesertSages';
 		case 'dodoco_tales':
 			return 'DodocoTales';
 		case 'dragons_bane':
@@ -513,6 +518,8 @@ function convertPaimonWeapon(paimonPullId: string): WeaponKey {
 			return 'TwinNephrite';
 		case 'ultimate_overlords_mega_magic_sword':
 			return 'UltimateOverlordsMegaMagicSword';
+		case 'uraku_misugiri':
+			return 'UrakuMisugiri';
 		case 'verdict':
 			return 'Verdict';
 		case 'vortex_vanquisher':
@@ -600,46 +607,53 @@ function convertPaimonCharacters(paimonCharacters: PaimonCharacters): ICharacter
 	return convertedCharacters;
 }
 
-export default class ConverterService {
-	static convertPaimonDataToApplicationState(
-		paimonData: PaimonData,
-		settings: ISettings
-	): ApplicationState {
-		return {
-			format: 'dvalin',
-			version: 0,
-			settings: {
-				...settings
-			},
-			user: {
-				ar: paimonData.ar,
-				...(isServerKey(paimonData.server) ? { server: paimonData.server } : undefined),
-				uid: paimonData['wish-uid'],
-				wl: paimonData.wl
-			},
-			...(paimonData.characters !== undefined
-				? { characters: convertPaimonCharacters(paimonData.characters) }
-				: undefined),
-			wishes: {
-				...(paimonData['wish-counter-character-event'] !== undefined
-					? {
-							// eslint-disable-next-line @typescript-eslint/naming-convention
-							CharacterEvent: convertPaimonWishes(paimonData['wish-counter-character-event'].pulls)
-						}
+export class PaimonMoeImporterService implements IImporterService {
+	import(data: unknown, applicationSettings: ISettings): ApplicationState {
+		if (isPaimonData(data)) {
+			return {
+				format: 'dvalin',
+				version: 0,
+				settings: {
+					...applicationSettings
+				},
+				user: {
+					ar: data.ar,
+					...(data.server !== undefined && isServerKey(data.server)
+						? { server: data.server }
+						: undefined),
+					...(data['wish-uid'] !== undefined ? { uid: data['wish-uid'] } : undefined),
+					wl: data.wl
+				},
+				...(data.characters !== undefined
+					? { characters: convertPaimonCharacters(data.characters) }
 					: undefined),
-				...(paimonData['wish-counter-weapon-event'] !== undefined
-					? // eslint-disable-next-line @typescript-eslint/naming-convention
-						{ WeaponEvent: convertPaimonWishes(paimonData['wish-counter-weapon-event'].pulls) }
-					: undefined),
-				...(paimonData['wish-counter-standard'] !== undefined
-					? // eslint-disable-next-line @typescript-eslint/naming-convention
-						{ Standard: convertPaimonWishes(paimonData['wish-counter-standard'].pulls) }
-					: undefined),
-				...(paimonData['wish-counter-beginners'] !== undefined
-					? // eslint-disable-next-line @typescript-eslint/naming-convention
-						{ Beginner: convertPaimonWishes(paimonData['wish-counter-beginners'].pulls) }
-					: undefined)
-			}
-		};
+				wishes: {
+					...(data['wish-counter-character-event'] !== undefined
+						? {
+								// eslint-disable-next-line @typescript-eslint/naming-convention
+								CharacterEvent: convertPaimonWishes(data['wish-counter-character-event'].pulls)
+							}
+						: undefined),
+					...(data['wish-counter-weapon-event'] !== undefined
+						? // eslint-disable-next-line @typescript-eslint/naming-convention
+							{ WeaponEvent: convertPaimonWishes(data['wish-counter-weapon-event'].pulls) }
+						: undefined),
+					...(data['wish-counter-standard'] !== undefined
+						? // eslint-disable-next-line @typescript-eslint/naming-convention
+							{ Standard: convertPaimonWishes(data['wish-counter-standard'].pulls) }
+						: undefined),
+					...(data['wish-counter-beginners'] !== undefined
+						? // eslint-disable-next-line @typescript-eslint/naming-convention
+							{ Beginner: convertPaimonWishes(data['wish-counter-beginners'].pulls) }
+						: undefined),
+					...(data['wish-counter-chronicled'] !== undefined
+						? // eslint-disable-next-line @typescript-eslint/naming-convention
+							{ Chronicled: convertPaimonWishes(data['wish-counter-chronicled'].pulls) }
+						: undefined)
+				}
+			};
+		} else {
+			throw 'wrong format';
+		}
 	}
 }

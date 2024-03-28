@@ -67,7 +67,7 @@
 					class="w-full"
 					disabled={value === undefined}
 					icon={mdiFilterRemove}
-					onClick={clearFilter}
+					on:click={clearFilter}
 				>
 					Clear Filter
 				</IconButton>

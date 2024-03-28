@@ -96,14 +96,14 @@
 			icon={mdiHome}
 			{isSidebarOpen}
 			link={'/'}
-			onClick={closeSidebar}
+			on:click={closeSidebar}
 			title="Dashboard"
 		/>
 		<SidebarEntry
 			icon={mdiStar}
 			{isSidebarOpen}
 			link={'/wish-statistics/overview'}
-			onClick={closeSidebar}
+			on:click={closeSidebar}
 			title="Wish Statistics"
 		/>
 
@@ -135,7 +135,7 @@
 				icon={mdiCog}
 				{isSidebarOpen}
 				link={'/settings'}
-				onClick={closeSidebar}
+				on:click={closeSidebar}
 				title="Settings"
 			/>
 		</div>
@@ -152,7 +152,7 @@
 				icon={mdiAccount}
 				{isSidebarOpen}
 				link={'/login'}
-				onClick={closeSidebar}
+				on:click={closeSidebar}
 				title="Login or Register"
 				variant="default"
 			/>

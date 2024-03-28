@@ -8,17 +8,23 @@
 	import { Card, CardHeader } from '$lib/components/ui/card';
 	import { CardContent } from '$lib/components/ui/card/index.js';
 	import InfoCell from '$lib/components/ui/info-cell/InfoCell.svelte';
-	import { mdiMoonWaningCrescent } from '@mdi/js';
+	import { mdiAlert, mdiCloseCircle, mdiMoonWaningCrescent } from '@mdi/js';
+	import { Alert, AlertDescription, AlertTitle } from '$lib/components/ui/alert';
 
 	export let icon: string;
 	export let title: string;
 	export let data: IMappedWish[];
 
+	const fiveStars = data
+		.filter((wish: IMappedWish) => wish.rarity === 5)
+		.sort((a, b) => b.number - a.number);
+
+	const fourStars = data.filter((wish: IMappedWish) => wish.rarity === 4);
+
+	const threeStars = data.filter((wish: IMappedWish) => wish.rarity === 3);
+
 	const filterFiveStars = (): IMappedWish[] => {
-		return data
-			.filter((wish: IMappedWish) => wish.rarity === 5)
-			.sort((a, b) => b.number - a.number)
-			.slice(0, 10);
+		return fiveStars.slice(0, 10);
 	};
 </script>
 
@@ -41,25 +47,42 @@
 				</svelte:fragment>
 			</InfoCell>
 			<InfoCell title="% of total pulls">
-				<Text type="h4">{0}</Text>
-				<Text type="h4">{0}</Text>
+				{#if fiveStars.length > 0}
+					<Text class="text-fivestar" type="h4">
+						{((fiveStars.length / data.length) * 100).toFixed(1)}
+					</Text>
+				{/if}
+				{#if fourStars.length > 0}
+					<Text class="text-fourstar" type="h4">
+						{((fourStars.length / data.length) * 100).toFixed(1)}
+					</Text>
+				{/if}
+				{#if threeStars.length > 0}
+					<Text class="text-threestar" type="h4">
+						{((threeStars.length / data.length) * 100).toFixed(1)}
+					</Text>
+				{/if}
 			</InfoCell>
 			<InfoCell title="Pity">
-				<Text type="h4">{0}</Text>
-				<Text type="h4">{0}</Text>
+				<Text class="text-fivestar" type="h4">{0}</Text>
+				<Text class="text-fourstar" type="h4">{0}</Text>
 			</InfoCell>
 		</div>
 		<div class="flex flex-col gap-2">
-			<Text type="h4">Latest 5* pulls</Text>
-			<div class="flex flex-wrap gap-2">
-				{#if filterFiveStars().length > 0}
+			{#if filterFiveStars().length > 0}
+				<Text type="h4">Latest 5* pulls</Text>
+				<div class="flex flex-wrap gap-2">
 					{#each filterFiveStars() as pull}
 						<PullChip name={pull.name} key={pull.key} counter={pull.pity} />
 					{/each}
-				{:else}
-					You haven't pulled a 5* in this banner yet
-				{/if}
-			</div>
+				</div>
+			{:else}
+				<Alert class="gap-6">
+					<Icon path={mdiCloseCircle} />
+					<AlertTitle>Come back later</AlertTitle>
+					<AlertDescription>You haven't pulled a 5* in this banner yet</AlertDescription>
+				</Alert>
+			{/if}
 		</div>
 	</CardContent>
 </Card>

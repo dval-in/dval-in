@@ -27,7 +27,7 @@
 <IconButton
 	class="min-w-48 max-sm:flex-1 justify-start"
 	icon={mdiMagnify}
-	onClick={opencmd}
+	on:click={opencmd}
 	variant="outline"
 >
 	Search...

@@ -5,47 +5,8 @@
 	import IconButton from '$lib/components/ui/icon-button/IconButton.svelte';
 	import { mdiExport, mdiImport } from '@mdi/js';
 	import type { Theme } from '$lib/types/theme';
-	import type { PaimonData } from '$lib/types/import/paimon';
-	import ConverterService from '$lib/services/converter';
 	import { Button } from '$lib/components/ui/button';
-	import { toast } from 'svelte-sonner';
 	import DefaultLayout from '$lib/components/layout/DefaultLayout.svelte';
-
-	function handleSettingsImport() {
-		let element = document.createElement('input');
-		element.type = 'file';
-		element.style.display = 'none';
-		element.onchange = (event) => {
-			const target = event.target as HTMLInputElement;
-			if (target.files) {
-				const file = target.files[0];
-				// Handle file operations here
-				file.text().then((text) => {
-					try {
-						let paimonData: PaimonData = JSON.parse(text);
-						applicationState.set(
-							ConverterService.convertPaimonDataToApplicationState(
-								paimonData,
-								$applicationState.settings
-							)
-						);
-						toast.success('Imported successfully!', {
-							description:
-								'Your data has been imported successfully and stored locally in your Browser'
-						});
-					} catch (e) {
-						toast.error('An error happened!', {
-							description: 'Make sure you upload the right file format'
-						});
-					}
-				});
-			}
-		};
-
-		document.body.appendChild(element);
-		element.click();
-		document.body.removeChild(element);
-	}
 
 	const handleSettingsExport = () => {
 		let element = document.createElement('a');
@@ -84,7 +45,7 @@
 				on:click={() => changeThemeTo('light')}
 			>
 				<Text
-					textColor={`${$applicationState.settings.theme === 'light' ? 'text' : 'neutral'}`}
+					class={`${$applicationState.settings.theme === 'light' ? 'text-text' : 'text-neutral'}`}
 					type="h3"
 				>
 					Light
@@ -95,7 +56,7 @@
 				on:click={() => changeThemeTo('dark')}
 			>
 				<Text
-					textColor={`${$applicationState.settings.theme === 'dark' ? 'text' : 'neutral'}`}
+					class={`${$applicationState.settings.theme === 'dark' ? 'text-text' : 'text-neutral'}`}
 					type="h3"
 				>
 					Dark
@@ -108,8 +69,8 @@
 		<Text type="h3">Data</Text>
 
 		<div class="flex flex-row gap-4">
-			<IconButton icon={mdiImport} onClick={handleSettingsImport}>Import Data</IconButton>
-			<IconButton icon={mdiExport} onClick={handleSettingsExport}>Export Data</IconButton>
+			<IconButton href="/settings/import" icon={mdiImport}>Import Data</IconButton>
+			<IconButton icon={mdiExport} on:click={handleSettingsExport}>Export Data</IconButton>
 		</div>
 	</div>
 </DefaultLayout>

@@ -3,10 +3,9 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 
 	export let icon: string = '';
-	export let onClick: () => void = () => {};
 </script>
 
-<Button {...$$restProps} on:click={onClick}>
+<Button {...$$restProps} on:click>
 	<Icon path={icon} />
 	{#if $$slots}
 		<div class="ml-2">
